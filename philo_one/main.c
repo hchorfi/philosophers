@@ -6,7 +6,7 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:52:14 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/05/20 23:46:10 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/05/27 16:21:57 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,12 @@ void	ft_init(int argc, char **argv, t_data *data, t_philo *philo)
 		philo[i].tt_sleep = ft_atoi(argv[4]);
 		philo[i].time = time_now();
 		philo[i].data = data;
+		philo[i].n_eat = 0;
+		philo[i].last_eat = TIMESTAMP;
 		pthread_mutex_init(&(data->f_mutex)[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&data->print_state, NULL);
 }
 
 void	ft_print_philo_data(t_philo *philo, t_data *data)
@@ -67,8 +70,19 @@ void	ft_clear(t_philo *philo, t_data *data)
 		pthread_mutex_destroy(&(data->f_mutex)[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&data->print_state);
 	free(philo);
 	free(data->thread);
+}
+
+void	ft_print_stat(int msg, t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->print_state);
+	if(msg == TAKE_R)
+		printf("%ld philo %d take right fork\n", TIMESTAMP, philo->ph_number);
+	if (msg == TAKE_L)
+		printf("%ld philo %d take left fork\n",TIMESTAMP, philo->ph_number);
+	pthread_mutex_unlock(&philo->data->print_state);
 }
 
 void	*ft_routine(void *v_philo)
@@ -84,17 +98,18 @@ void	*ft_routine(void *v_philo)
 	while (1)
 	{
 		pthread_mutex_lock(&(data->f_mutex)[RIGHT]);
-		printf("%ld philo %d take right fork\n", TIMESTAMP, philo->ph_number);
+		ft_print_stat(TAKE_R ,philo);
 		pthread_mutex_lock(&(data->f_mutex)[LEFT]);
-		printf("%ld philo %d take left fork\n",TIMESTAMP, philo->ph_number);
-		printf("%ld philo %d eating\n",TIMESTAMP, philo->ph_number);
+		ft_print_stat(TAKE_L ,philo);
+		(philo->n_eat)++;
+		printf("%ld philo %d eating for the %d th time\n",TIMESTAMP, philo->ph_number, philo->n_eat);
 		usleep(philo->tt_eat * 1000);
 		pthread_mutex_unlock(&(data->f_mutex)[LEFT]);
 		pthread_mutex_unlock(&(data->f_mutex)[RIGHT]);
 		printf("%ld philo %d sleeping\n",TIMESTAMP, philo->ph_number);
 		usleep(philo->tt_sleep * 1000);
 		printf("%ld philo %d thinking\n",TIMESTAMP, philo->ph_number);
-		usleep(200 * 1000);
+		usleep(300 * 1000);
 	}
 	return ((void*)0);
 }
@@ -106,9 +121,7 @@ void	ft_thread(t_philo *philo, t_data *data)
 	i = 0;
 	while (i < data->n_philos)
 	{
-		//data->ph_counter = i;
 		pthread_create(&data->thread[i], NULL, &ft_routine, philo);
-		//printf("thread %d created\n", i);
 		philo++;
 		i++;
 	}

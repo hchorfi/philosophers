@@ -6,7 +6,7 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:54:36 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/05/20 22:06:56 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/05/27 16:19:05 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@
 #define LEFT philo->ph_number - 1
 #define RIGHT ((philo->ph_number - 1) + 1) % data->n_philos
 #define TIMESTAMP time_now() - philo->time
+#define TAKE_R 1
+#define TAKE_L 2
 
 typedef struct  s_data
 {
     int             n_philos;
     int             max_ph_eat;
-    int             ph_counter;
     pthread_mutex_t *f_mutex;
+    pthread_mutex_t print_state;
     pthread_t	    *thread;
 }                   t_data;
 
@@ -39,6 +41,8 @@ typedef struct  s_philo
     int         tt_die;
     int         tt_eat;
     int         tt_sleep;
+    int         n_eat;
+    unsigned long   last_eat;
     unsigned long   time;
     t_data      *data;
 }               t_philo;
