@@ -6,11 +6,11 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 15:16:03 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/06 17:42:18 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/06 18:00:18 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 int	arg_count_err(void)
 {

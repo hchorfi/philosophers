@@ -6,22 +6,22 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:52:14 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/06 17:48:55 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/07 16:13:15 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 void	ft_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->eat_mutex);
+	sem_wait(philo->data->sem_eat);
 	ft_print_stat(EATING, philo);
 	philo->eating_time = time_now();
 	usleep((philo->tt_eat - 20) * 1000);
 	(philo->n_eat)++;
 	while ((time_now() - philo->eating_time) < ((unsigned long)philo->tt_eat))
 		;
-	pthread_mutex_unlock(&philo->eat_mutex);
+	sem_post(philo->data->sem_eat);
 }
 
 void	*ft_routine(void *v_philo)
@@ -36,13 +36,13 @@ void	*ft_routine(void *v_philo)
 		if (philo->n_eat < data->max_ph_eat || !data->max_ph_eat
 			|| data->max_ph_eat == -1)
 		{
-			pthread_mutex_lock(&(data->f_mutex)[philo->r_fork]);
+			sem_wait(data->sem_forks);
 			ft_print_stat(TAKE_R, philo);
-			pthread_mutex_lock(&(data->f_mutex)[philo->l_fork]);
+			sem_wait(data->sem_forks);
 			ft_print_stat(TAKE_L, philo);
 			ft_eat(philo);
-			pthread_mutex_unlock(&(data->f_mutex)[philo->r_fork]);
-			pthread_mutex_unlock(&(data->f_mutex)[philo->l_fork]);
+			sem_post(data->sem_forks);
+			sem_post(data->sem_forks);
 			ft_print_stat(SLEEPING, philo);
 			usleep(philo->tt_sleep * 1000);
 			ft_print_stat(THINKING, philo);
@@ -69,7 +69,7 @@ void	*ft_cheker(void *v_philo)
 			if (diff > philo[i].tt_die && philo[i].n_eat
 				!= philo[i].data->max_ph_eat && philo[i].stat != EATING)
 			{
-				pthread_mutex_lock(&philo[i].eat_mutex);
+				sem_wait(philo->data->sem_eat);
 				ft_print_stat(DEAD, &philo[i]);
 			}
 			i++;
@@ -116,7 +116,6 @@ int	main(int argc, char **argv)
 	{
 		philo = malloc(sizeof(t_philo) * ft_atoi(argv[1]));
 		data.thread = malloc(sizeof(pthread_t) * ft_atoi(argv[1]));
-		data.f_mutex = malloc(sizeof(pthread_mutex_t) * ft_atoi(argv[1]));
 		ft_init(argc, argv, &data, philo);
 		ft_thread(philo, &data);
 		ft_clear(philo, &data);

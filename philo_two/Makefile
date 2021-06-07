@@ -6,11 +6,11 @@
 #    By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/06 17:44:45 by hchorfi           #+#    #+#              #
-#    Updated: 2021/06/06 17:46:27 by hchorfi          ###   ########.fr        #
+#    Updated: 2021/06/07 15:21:05 by hchorfi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo_one
+NAME = philo_two
 
 SRCS = main.c\
 		error.c\

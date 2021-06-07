@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.h                                        :+:      :+:    :+:   */
+/*   philo_two.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:54:36 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/06 17:53:24 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/07 16:03:06 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <semaphore.h>
 
 # define TAKE_R 1
 # define TAKE_L 2
@@ -26,13 +27,17 @@
 # define SLEEPING 4
 # define THINKING 5
 # define DEAD 6
+# define SEMFORKS "semaphore_forks"
+# define SEMPRINT "semaphore_print"
+# define SEMEAT "semaphore_eat"
 
 typedef struct s_data
 {
 	int				n_philos;
 	int				max_ph_eat;
-	pthread_mutex_t	*f_mutex;
-	pthread_mutex_t	print_state;
+	sem_t			*sem_forks;
+	sem_t			*sem_print;
+	sem_t			*sem_eat;
 	pthread_t		*thread;
 	unsigned long	start_time;
 }					t_data;
@@ -50,7 +55,6 @@ typedef struct s_philo
 	unsigned long	last_eat;
 	unsigned long	eating_time;
 	unsigned long	sleeping_time;
-	pthread_mutex_t	eat_mutex;
 	t_data			*data;
 }					t_philo;
 

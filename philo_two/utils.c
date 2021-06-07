@@ -6,11 +6,11 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 15:00:51 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/06 17:49:00 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/07 16:14:23 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_two.h"
 
 unsigned long	time_now(void)
 {
@@ -47,17 +47,12 @@ int	ft_atoi(const char *str)
 
 void	ft_clear(t_philo *philo, t_data *data)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->n_philos)
-	{
-		pthread_mutex_destroy(&(data->f_mutex)[i]);
-		pthread_mutex_destroy(&philo[i].eat_mutex);
-		i++;
-	}
-	pthread_mutex_destroy(&data->print_state);
+	sem_close(data->sem_forks);
+	sem_close(data->sem_print);
+	sem_close(data->sem_eat);
+	sem_unlink(SEMFORKS);
+	sem_unlink(SEMPRINT);
+	sem_unlink(SEMEAT);
 	free(data->thread);
-	free(data->f_mutex);
 	free(philo);
 }
