@@ -6,7 +6,7 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:54:36 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/07 16:03:06 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 18:38:04 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # define SEMFORKS "semaphore_forks"
 # define SEMPRINT "semaphore_print"
 # define SEMEAT "semaphore_eat"
+# define ONE_DIED 10
 
 typedef struct s_data
 {
@@ -71,13 +72,14 @@ int					arg_count_err(void);
 unsigned long		time_now(void);
 int					ft_atoi(const	char *str);
 void				ft_clear(t_philo *philo, t_data *data);
+int					check_args(int argc, char **argv);
 
 /*
 ** print.c
 */
 
-void				ft_print_stat(int msg, t_philo *philo);
-void				ft_print_stat2(int msg, t_philo *philo);
+int					ft_print_stat(int msg, t_philo *philo);
+int					ft_print_stat2(int msg, t_philo *philo);
 
 /*
 ** init.c

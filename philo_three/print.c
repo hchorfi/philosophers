@@ -6,13 +6,13 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/06 17:46:39 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/08 18:26:46 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 13:24:52 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_one.h"
+#include "philo_three.h"
 
-int	ft_print_stat2(int msg, t_philo *philo)
+void	ft_print_stat2(int msg, t_philo *philo)
 {
 	if (msg == SLEEPING)
 	{
@@ -31,23 +31,22 @@ int	ft_print_stat2(int msg, t_philo *philo)
 		philo->stat = DEAD;
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
 		printf("\033[0;31mphilo %d died\n\033[0m", philo->ph_number);
-		return (1);
+		exit(1);
 	}
-	return (0);
 }
 
-int	ft_print_stat(int msg, t_philo *philo)
+void	ft_print_stat(int msg, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->print_state);
+	sem_wait(philo->data->sem_print);
 	if (msg == TAKE_R)
 	{
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
-		printf("\033[0;32mphilo %d take right fork\n\033[0m", philo->ph_number);
+		printf("\033[0;32mphilo %d take a fork\n\033[0m", philo->ph_number);
 	}
 	else if (msg == TAKE_L)
 	{
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
-		printf("\033[0;32mphilo %d take left fork\n\033[0m", philo->ph_number);
+		printf("\033[0;32mphilo %d take a fork\n\033[0m", philo->ph_number);
 	}
 	else if (msg == EATING)
 	{
@@ -55,8 +54,7 @@ int	ft_print_stat(int msg, t_philo *philo)
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
 		printf("\033[0;34mphilo %d eating\n\033[0m", philo->ph_number);
 	}
-	else if (ft_print_stat2(msg, philo) == 1)
-		return (1);
-	pthread_mutex_unlock(&philo->data->print_state);
-	return (0);
+	else
+		ft_print_stat2(msg, philo);
+	sem_post(philo->data->sem_print);
 }

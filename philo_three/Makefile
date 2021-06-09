@@ -6,17 +6,18 @@
 #    By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/06/06 17:44:45 by hchorfi           #+#    #+#              #
-#    Updated: 2021/06/08 18:24:03 by hchorfi          ###   ########.fr        #
+#    Updated: 2021/06/08 19:31:53 by hchorfi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo_one
+NAME = philo_three
 
 SRCS = main.c\
 		error.c\
 		utils.c \
 		init.c \
-		print.c
+		print.c \
+		thread.c
 
 FLAGS = -Werror -Wextra -Wall
 

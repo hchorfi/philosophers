@@ -6,7 +6,7 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 15:00:51 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/07 16:14:23 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 19:06:53 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,33 @@ int	ft_atoi(const char *str)
 
 void	ft_clear(t_philo *philo, t_data *data)
 {
-	sem_close(data->sem_forks);
-	sem_close(data->sem_print);
-	sem_close(data->sem_eat);
 	sem_unlink(SEMFORKS);
 	sem_unlink(SEMPRINT);
 	sem_unlink(SEMEAT);
 	free(data->thread);
 	free(philo);
+}
+
+int	check_args(int argc, char **argv)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (i < argc)
+	{
+		j = 0;
+		while (argv[i][j] != '\0')
+		{
+			if (argv[i][j] >= '0' && argv[i][j] <= '9')
+				j++;
+			else
+				return (1);
+		}
+		if (ft_atoi(argv[i]) >= 0)
+			i++;
+		else
+			return (1);
+	}
+	return (0);
 }

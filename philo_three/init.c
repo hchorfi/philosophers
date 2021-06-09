@@ -6,11 +6,11 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/06 17:43:37 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/08 19:01:44 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 15:04:13 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 void	ft_init_struct(int i, t_philo *philo, t_data *data, char **argv)
 {
@@ -43,11 +43,12 @@ void	ft_init(int argc, char **argv, t_data *data, t_philo *philo)
 		ft_init_struct(i, philo, data, argv);
 		i++;
 	}
+	data->pids = malloc(sizeof(pid_t) * data->n_philos);
 	sem_unlink(SEMFORKS);
-	data->sem_forks = sem_open(SEMFORKS, O_CREAT, 0777, data->n_philos);
+	data->sem_forks = sem_open(SEMFORKS, O_CREAT, 0666, data->n_philos);
 	sem_unlink(SEMPRINT);
-	data->sem_print = sem_open(SEMPRINT, O_CREAT, 0777, 1);
+	data->sem_print = sem_open(SEMPRINT, O_CREAT, 0666, 1);
 	sem_unlink(SEMEAT);
-	data->sem_print = sem_open(SEMEAT, O_CREAT, 0777, 1);
+	data->sem_print = sem_open(SEMEAT, O_CREAT, 0666, 1);
 	data->start_time = time_now();
 }

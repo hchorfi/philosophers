@@ -6,13 +6,13 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/06 17:46:39 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/07 16:14:05 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 18:34:48 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_two.h"
 
-void	ft_print_stat2(int msg, t_philo *philo)
+int	ft_print_stat2(int msg, t_philo *philo)
 {
 	if (msg == SLEEPING)
 	{
@@ -31,11 +31,12 @@ void	ft_print_stat2(int msg, t_philo *philo)
 		philo->stat = DEAD;
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
 		printf("\033[0;31mphilo %d died\n\033[0m", philo->ph_number);
-		exit(0);
+		return (1);
 	}
+	return (0);
 }
 
-void	ft_print_stat(int msg, t_philo *philo)
+int	ft_print_stat(int msg, t_philo *philo)
 {
 	sem_wait(philo->data->sem_print);
 	if (msg == TAKE_R)
@@ -54,7 +55,8 @@ void	ft_print_stat(int msg, t_philo *philo)
 		printf("\033[0;31m%ld\033[0m ", time_now() - philo->data->start_time);
 		printf("\033[0;34mphilo %d eating\n\033[0m", philo->ph_number);
 	}
-	else
-		ft_print_stat2(msg, philo);
+	else if (ft_print_stat2(msg, philo) == 1)
+		return (1);
 	sem_post(philo->data->sem_print);
+	return (0);
 }

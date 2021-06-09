@@ -6,7 +6,7 @@
 /*   By: hchorfi <hchorfi@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 14:52:14 by hchorfi           #+#    #+#             */
-/*   Updated: 2021/06/07 16:13:15 by hchorfi          ###   ########.fr       */
+/*   Updated: 2021/06/08 19:07:33 by hchorfi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	*ft_routine(void *v_philo)
 	return ((void *)0);
 }
 
-void	*ft_cheker(void *v_philo)
+int	ft_cheker(void *v_philo)
 {
 	t_philo			*philo;
 	int				i;
@@ -71,6 +71,7 @@ void	*ft_cheker(void *v_philo)
 			{
 				sem_wait(philo->data->sem_eat);
 				ft_print_stat(DEAD, &philo[i]);
+				return (ONE_DIED);
 			}
 			i++;
 		}
@@ -78,10 +79,10 @@ void	*ft_cheker(void *v_philo)
 			break ;
 		usleep(100);
 	}
-	return ((void *)0);
+	return (0);
 }
 
-void	ft_thread(t_philo *philo, t_data *data)
+int	ft_thread(t_philo *philo, t_data *data)
 {
 	int	i;
 
@@ -99,12 +100,15 @@ void	ft_thread(t_philo *philo, t_data *data)
 		i += 2;
 	}
 	i = 0;
-	ft_cheker(philo);
-	while (i < data->n_philos)
+	if (ft_cheker(philo) != ONE_DIED)
 	{
-		pthread_join(data->thread[i], NULL);
-		i++;
+		while (i < data->n_philos)
+		{
+			pthread_join(data->thread[i], NULL);
+			i++;
+		}
 	}
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -114,6 +118,8 @@ int	main(int argc, char **argv)
 
 	if (argc == 5 || argc == 6)
 	{
+		if (check_args(argc, argv))
+			return (arg_count_err());
 		philo = malloc(sizeof(t_philo) * ft_atoi(argv[1]));
 		data.thread = malloc(sizeof(pthread_t) * ft_atoi(argv[1]));
 		ft_init(argc, argv, &data, philo);
